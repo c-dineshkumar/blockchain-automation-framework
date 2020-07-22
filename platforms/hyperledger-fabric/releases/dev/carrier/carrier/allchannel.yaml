@@ -1,0 +1,50 @@
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: channel-carrier
+  namespace: carrier-net
+  annotations:
+    flux.weave.works/automated: "false"
+spec:
+  releaseName: channel-carrier
+  chart:
+    git: ssh://git@github.com/c-dineshkumar/blockchain-automation-framework.git
+    ref: develop
+    path: platforms/hyperledger-fabric/charts/create_channel   
+  values:
+    metadata:
+      namespace: carrier-net
+      images:
+        fabrictools: hyperledger/fabric-tools:2.0.0
+        alpineutils: index.docker.io/hyperledgerlabs/alpine-utils:1.0
+    peer:
+      name: peer0
+      address: peer0.carrier-net:7051
+      localmspid: carrierMSP
+      loglevel: debug
+      tlsstatus: true
+
+    vault:
+      role: vault-role
+      address: http://a44fdf72fc78111eaae3f0a4fb79d321-228185970.ap-south-1.elb.amazonaws.com:9000
+      authpath: carrier-net-auth
+      adminsecretprefix: secret/crypto/peerOrganizations/carrier-net/users/admin
+      orderersecretprefix: secret/crypto/peerOrganizations/carrier-net/orderer 
+      serviceaccountname: vault-auth
+      imagesecretname: regcred
+
+    channel:
+      name: allchannel
+    orderer:
+      address: orderer1.org1ambr.fab.cluster4.aws.bafevent.com:8443
+    channeltx: |-
+      CpkEChgKFggCGgYI2snh+AUiCmFsbGNoYW5uZWwS/AMK+QMKCmFsbGNoYW5uZWwSZhJUCgtBcHBs
+      aWNhdGlvbhJFEg4KCmNhcnJpZXJNU1ASABIMCghzdG9yZU1TUBIAEhAKDHdhcmVob3VzZU1TUBIA
+      EhMKD21hbnVmYWN0dXJlck1TUBIAGg4KCkNvbnNvcnRpdW0SABqCAxLWAgoLQXBwbGljYXRpb24S
+      xgIIARIMCghzdG9yZU1TUBIAEhAKDHdhcmVob3VzZU1TUBIAEhMKD21hbnVmYWN0dXJlck1TUBIA
+      Eg4KCmNhcnJpZXJNU1ASABokCgxDYXBhYmlsaXRpZXMSFBIKCggKBFYxXzESABoGQWRtaW5zIjUK
+      FExpZmVjeWNsZUVuZG9yc2VtZW50Eh0SEwgDEg8KC0VuZG9yc2VtZW50EAIaBkFkbWlucyIsCgtF
+      bmRvcnNlbWVudBIdEhMIAxIPCgtFbmRvcnNlbWVudBACGgZBZG1pbnMiIgoHUmVhZGVycxIXEg0I
+      AxIJCgdSZWFkZXJzGgZBZG1pbnMiIgoHV3JpdGVycxIXEg0IAxIJCgdXcml0ZXJzGgZBZG1pbnMi
+      IgoGQWRtaW5zEhgSDggDEgoKBkFkbWlucxACGgZBZG1pbnMqBkFkbWlucxonCgpDb25zb3J0aXVt
+      EhkSFwoVU3VwcGx5Q2hhaW5Db25zb3J0aXVt
