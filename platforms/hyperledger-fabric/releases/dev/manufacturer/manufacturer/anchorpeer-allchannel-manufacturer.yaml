@@ -1,0 +1,49 @@
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: anchorpeer-allchannel-manufacturer
+  namespace: manufacturer-net
+  annotations:
+    flux.weave.works/automated: "false"
+spec:
+  releaseName: anchorpeer-allchannel-manufacturer
+  chart:
+    git: ssh://git@github.com/c-dineshkumar/blockchain-automation-framework.git
+    ref: develop
+    path: platforms/hyperledger-fabric/charts/anchorpeer
+  values:
+    metadata:
+      namespace: manufacturer-net
+      images:
+        fabrictools: hyperledger/fabric-tools:2.0.0
+        alpineutils: index.docker.io/hyperledgerlabs/alpine-utils:1.0
+
+    peer:
+      name: peer0
+      address: peer0.manufacturer-net.org2ambr.fab.cluster4.aws.bafevent.com:8443
+      localmspid: manufacturerMSP
+      loglevel: debug
+      tlsstatus: true
+
+    vault:
+      role: vault-role
+      address: http://a44fdf72fc78111eaae3f0a4fb79d321-228185970.ap-south-1.elb.amazonaws.com:9000
+      authpath: manufacturer-net-auth
+      adminsecretprefix: secret/crypto/peerOrganizations/manufacturer-net/users/admin
+      orderersecretprefix: secret/crypto/peerOrganizations/manufacturer-net/orderer
+      serviceaccountname: vault-auth
+      imagesecretname: regcred
+
+    channel:
+      name: allchannel      
+    orderer:
+      address: orderer1.org1ambr.fab.cluster4.aws.bafevent.com:8443
+    anchorstx: |-
+      Cu4CChgKFggCGgYIuuPk+AUiCmFsbGNoYW5uZWwS0QIKzgIKCmFsbGNoYW5uZWwSaBJmCgtBcHBs
+      aWNhdGlvbhJXCAESUwoPbWFudWZhY3R1cmVyTVNQEkAaBwoDTVNQEgAiDwoLRW5kb3JzZW1lbnQS
+      ACILCgdSZWFkZXJzEgAiCwoHV3JpdGVycxIAIgoKBkFkbWlucxIAGtUBEtIBCgtBcHBsaWNhdGlv
+      bhLCAQgBEr0BCg9tYW51ZmFjdHVyZXJNU1ASqQEIARpdCgtBbmNob3JQZWVycxJOEkQKQgo9cGVl
+      cjAubWFudWZhY3R1cmVyLW5ldC5vcmcyYW1ici5mYWIuY2x1c3RlcjQuYXdzLmJhZmV2ZW50LmNv
+      bRD7QRoGQWRtaW5zGgcKA01TUBIAIg8KC0VuZG9yc2VtZW50EgAiCwoHUmVhZGVycxIAIgsKB1dy
+      aXRlcnMSACIKCgZBZG1pbnMSACoGQWRtaW5z
+
