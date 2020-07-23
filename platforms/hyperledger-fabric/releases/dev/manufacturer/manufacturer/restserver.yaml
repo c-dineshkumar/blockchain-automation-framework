@@ -1,0 +1,46 @@
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: manufacturer-restserver
+  namespace: manufacturer-net
+  annotations:
+    flux.weave.works/automated: "false"
+spec:
+  chart:
+    path: examples/supplychain-app/charts/fabric-restserver
+    git: ssh://git@github.com/c-dineshkumar/blockchain-automation-framework.git
+    ref: develop
+  releaseName: manufacturer-restserver
+  values:
+    metadata:
+      namespace: manufacturer-net
+    server:
+      name: manufacturer-restserver
+      port: 20001
+      localmspid: manufacturerMSP
+      image: index.docker.io/hyperledgerlabs/supplychain_fabric:rest_server_latest
+      username: admin
+      cert_path: "/secret/tls/admin.cert"
+      key_path: "/secret/tls/admin.pem"
+    storage:
+      storageclassname: manufacturersc
+      storagesize: 512Mi
+    vault:
+      address: http://a44fdf72fc78111eaae3f0a4fb79d321-228185970.ap-south-1.elb.amazonaws.com:9000
+      role: vault-role
+      authpath: manufacturer-net-auth
+      secretprefix: secret/crypto/peerOrganizations/manufacturer-net
+      serviceaccountname: vault-auth
+      imagesecretname: regcred
+      image: hyperledgerlabs/alpine-utils:1.0
+    service:
+      servicetype: ClusterIP
+      ports:
+        apiPort: 20001
+        targetPort: 8000
+    connection:
+      peer: peer0.manufacturer-net
+      peerAddress: peer0.manufacturer-net
+      peerPort: 7051
+      ordererAddress: orderer1.org1ambr.fab.cluster4.aws.bafevent.com
+      ordererPort: 8443
