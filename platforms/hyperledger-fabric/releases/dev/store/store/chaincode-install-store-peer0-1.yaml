@@ -1,0 +1,47 @@
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: chaincode-install-store-peer0-1
+  namespace: store-net
+  annotations:
+    flux.weave.works/automated: "false"
+spec:
+  releaseName: chaincode-install-store-peer0-1
+  chart:
+    git: ssh://git@github.com/c-dineshkumar/blockchain-automation-framework.git
+    ref: develop
+    path: platforms/hyperledger-fabric/charts/install_chaincode
+  values:
+    metadata:
+      namespace: store-net
+      images:
+        fabrictools: hyperledger/fabric-tools:2.0.0
+        alpineutils: index.docker.io/hyperledgerlabs/alpine-utils:1.0
+    peer:
+      name: peer0
+      address: peer0.store-net:7051
+      localmspid: storeMSP
+      loglevel: debug
+      tlsstatus: true
+    vault:
+      role: vault-role
+      address: http://a44fdf72fc78111eaae3f0a4fb79d321-228185970.ap-south-1.elb.amazonaws.com:9000
+      authpath: store-net-auth
+      adminsecretprefix: secret/crypto/peerOrganizations/store-net/users/admin 
+      orderersecretprefix: secret/crypto/peerOrganizations/store-net/orderer
+      serviceaccountname: vault-auth
+      imagesecretname: regcred
+      secretgitprivatekey: secret/credentials/store-net/git?git_password
+      tls: false
+    orderer:
+      address: orderer1.org1ambr.fab.cluster4.aws.bafevent.com:8443
+    chaincode:
+      name: cc_supplychain
+      version: 1
+      maindirectory: cmd
+      repository:
+        hostname: "github.com"
+        git_username: "c-dineshkumar"
+        url: github.com/c-dineshkumar/blockchain-automation-framework.git
+        branch: develop
+        path: examples/supplychain-app/fabric/chaincode_rest_server/chaincode/
