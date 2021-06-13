@@ -1,3 +1,4 @@
+[![Board Status](https://dev.azure.com/AVBG/dab3667b-5413-45be-a535-6b39aeee083a/d334c630-e73f-4039-93ed-87c886a0f576/_apis/work/boardbadge/217bdc82-2742-4359-876c-d239f65076cd)](https://dev.azure.com/AVBG/dab3667b-5413-45be-a535-6b39aeee083a/_boards/board/t/d334c630-e73f-4039-93ed-87c886a0f576/Microsoft.EpicCategory)
 # Blockchain Automation Framework [![join the chat][rocketchat-image]][rocketchat-url]
 
 [rocketchat-url]: https://chat.hyperledger.org/channel/blockchain-automation-framework
